@@ -13,6 +13,6 @@
     <description>$description$</description>
     <releaseNotes>see https://github.com/dotnetprofessional/xpf/releases </releaseNotes>
     <copyright>Copyright 2014</copyright>
-    <tags>MONO REST HTTP API JSON XML</tags>
+    <tags>MONO REST HTTP API JSON XML XAMARIN</tags>
   </metadata>
 </package>

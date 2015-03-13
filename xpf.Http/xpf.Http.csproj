@@ -40,16 +40,32 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base64Encoder.cs" />
+    <Compile Include="EncodingExtensions.cs" />
+    <Compile Include="EncodingTypes.cs" />
     <Compile Include="ExpressionGroup.cs" />
+    <Compile Include="FormEncoder.cs" />
     <Compile Include="Http.cs" />
     <Compile Include="HttpCookie.cs" />
+    <Compile Include="HttpCookieCollection.cs" />
     <Compile Include="HttpHeader.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HttpRequest.cs" />
+    <Compile Include="HttpResponse.cs" />
+    <Compile Include="IContentType.cs" />
+    <Compile Include="IEncodeData.cs" />
+    <Compile Include="IReferenceUrl.cs" />
+    <Compile Include="JsonEncoder.cs" />
+    <Compile Include="RequestContentTypes.cs" />
+    <Compile Include="Scrape.cs" />
+    <Compile Include="StringEncoder.cs" />
     <Compile Include="UriDetail.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Url.cs" />
+    <Compile Include="XmlEncoder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">

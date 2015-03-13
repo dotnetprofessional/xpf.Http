@@ -1,23 +1,9 @@
-﻿using System;
-using System.Net;
-using FluentAssertions;
+﻿using FluentAssertions;
 using LiveDoc.Extensions;
 using Machine.Specifications;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace xpf.Http.Extensions.Spec
 {
-    [TestClass]
-    public class UnitTest1
-    {
-        [TestMethod]
-        public void TestMethod1()
-        {
-            var http = new Http();
-            var result = http.Url("http://twitter.com").GetClassification().Result;
-        }
-    }
-
     [Specification("Get the classification detail of a web site")]
     public class WebSiteClassificationSpec
     {

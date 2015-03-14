@@ -1,19 +1,21 @@
+using xpf.Http.Original;
+
 namespace xpf.Http
 {
-    public class EncodingTypes : IRequireNavigationContext
+    public class UserAgents : IRequireNavigationContext
     {
-        public EncodingTypes(NavigationContext parent)
+        public UserAgents(NavigationContext parent)
         {
             ((IRequireNavigationContext)this).NavigationContext = parent;
             this.Parent = parent;
         }
 
-        
-        public NavigationContext Base64
+
+        public NavigationContext IE11
         {
             get
             {
-                this.Parent.Model.Encoding = new Base64Encoder();
+                this.Parent.Model.Headers.Add(new HttpHeader{Key = "User-Agent", Value = new []{@"Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko"}});
                 return this.Parent;
             }
         }

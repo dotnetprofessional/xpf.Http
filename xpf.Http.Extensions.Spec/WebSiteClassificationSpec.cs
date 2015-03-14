@@ -28,7 +28,7 @@ namespace xpf.Http.Extensions.Spec
             {
                 Url = Scenario.Given.DocString;
                 var http = new Http();
-                Result = http.Url(Url).GetClassification().Result;
+                Result = http.Navigate(Url).GetClassification().Result;
             };
 
             It should_have_a_valid_result = () => Result.Should().NotBeNull();

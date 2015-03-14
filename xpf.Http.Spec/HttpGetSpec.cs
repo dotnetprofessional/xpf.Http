@@ -40,7 +40,7 @@ namespace xpf.Http.Spec
             {
                 Url = Scenario.Given.DocString;
                 var http = new Http(NancyTesting.Server.Handler);
-                Result = http.Url(Url).GetAsync<string>().Result;
+                Result = http.Navigate(Url).GetAsync<string>().Result;
             };
 
             It should_have_status_code_of_OK = () => Result.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -77,7 +77,7 @@ namespace xpf.Http.Spec
             {
                 Url = Scenario.Given.DocString;
                 var http = new Http(NancyTesting.Server.Handler);
-                Result = http.Url(Url).ResponseContentType.Json.GetAsync<Customer>().Result;
+                Result = http.Navigate(Url).ResponseContentType.Json.GetAsync<Customer>().Result;
             };
 
             It should_deserialize_into_class_instance = () => Result.Should().NotBeNull();
@@ -107,7 +107,7 @@ namespace xpf.Http.Spec
             {
                 Url = Scenario.Given.DocString;
                 var http = new Http(NancyTesting.Server.Handler);
-                Result = http.Url(Url).ResponseContentType.Xml.GetAsync<Customer>().Result;
+                Result = http.Navigate(Url).ResponseContentType.Xml.GetAsync<Customer>().Result;
             };
 
             It should_deserialize_into_class_instance = () => Result.Should().NotBeNull();
@@ -138,7 +138,7 @@ namespace xpf.Http.Spec
             {
                 Url = Scenario.Given.DocString;
                 var http = new Http(NancyTesting.Server.Handler);
-                Result = http.Url(Url).Encoding.Base64.GetAsync<string>().Result;
+                Result = http.Navigate(Url).Encoding.Base64.GetAsync<string>().Result;
             };
 
             It should_deserialize_into_class_instance = () => Result.Should().NotBeNull();
@@ -167,7 +167,7 @@ namespace xpf.Http.Spec
             {
                 Url = Scenario.Given.DocString;
                 var http = new Http(NancyTesting.Server.Handler);
-                Result = http.Url(Url).WithHeader("key1", new []{"value1"}).ResponseContentType.Json.GetAsync<List<string>>().Result;
+                Result = http.Navigate(Url).WithHeader("key1", new []{"value1"}).ResponseContentType.Json.GetAsync<List<string>>().Result;
             };
 
             It should_have_status_code_of_OK = () => Result.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -194,7 +194,7 @@ namespace xpf.Http.Spec
             {
                 Url = Scenario.Given.DocString;
                 var http = new Http(NancyTesting.Server.Handler);
-               Result = http.Url(Url).WithCookie("key1","value1", expiry: DateTime.Parse("1900/1/1")).GetAsync<string>().Result;
+               Result = http.Navigate(Url).WithCookie("key1","value1", expiry: DateTime.Parse("1900/1/1")).GetAsync<string>().Result;
             };
 
             It should_have_status_code_of_OK = () => Result.StatusCode.Should().Be(HttpStatusCode.OK);

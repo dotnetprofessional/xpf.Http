@@ -2,34 +2,34 @@ using System;
 
 namespace xpf.Http
 {
-    public class RequestContentTypes : IReferenceUrl
+    public class RequestContentTypes : IRequireNavigationContext
     {
-        public RequestContentTypes(Url parent, Action<IContentType> setModel)
+        public RequestContentTypes(NavigationContext parent, Action<IContentType> setModel)
         {
-            ((IReferenceUrl)this).Url = parent;
+            ((IRequireNavigationContext)this).NavigationContext = parent;
             this.Parent = parent;
             this.SetModel = setModel;
         }
 
-        public Url Json
+        public NavigationContext Json
         {
             get
             {
-                this.SetModel(new JsonEncoder());
+                this.SetModel(new JsonContent());
                 return this.Parent;
             } 
         }
 
-        public Url Xml
+        public NavigationContext Xml
         {
             get
             {
-                this.SetModel(new XmlEncoder());
+                this.SetModel(new XmlContent());
                 return this.Parent;
             }
         }
-        Url Parent { get; set; }
+        NavigationContext Parent { get; set; }
         Action<IContentType> SetModel { get; set; }
-        Url IReferenceUrl.Url { get; set; }
+        NavigationContext IRequireNavigationContext.NavigationContext { get; set; }
     }
 }

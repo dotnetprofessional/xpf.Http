@@ -5,7 +5,7 @@ using xpf.Http.Original;
 
 namespace xpf.Http
 {
-    public class FormEncoder : IContentType
+    public class FormContent : IContentType
     {
         public string ContentType
         {

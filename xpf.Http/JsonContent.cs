@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace xpf.Http
 {
-    public class JsonEncoder : IContentType
+    public class JsonContent : IContentType
     {
         public string ContentType
         {

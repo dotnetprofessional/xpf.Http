@@ -1,11 +1,14 @@
+using System.IO;
+using System.Threading.Tasks;
+
 namespace xpf.Http
 {
     public interface IEncodeData
     {
         string ContentEncoding { get; }
 
-        string Encode(string data);
+        Task<Stream> Encode(string data);
 
-        string Decode(string data);
+        Task<string> Decode(Stream data);
     }
 }

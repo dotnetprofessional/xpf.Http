@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace xpf.Http
 {
-    public class XmlEncoder : IContentType
+    public class XmlContent : IContentType
     {
         public string ContentType
         {

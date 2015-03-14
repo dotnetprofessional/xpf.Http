@@ -19,32 +19,12 @@ namespace xpf.Http
 
         HttpMessageHandler MessageHandler { get; set; }
 
-        public Url Url(string url)
+        public NavigationContext Navigate(string url)
         {
-            return new Url(this.MessageHandler, url);
+            return new NavigationContext(this.MessageHandler, url);
         }
 
     }
-
-    //public class CookieGrammar 
-    //{
-    //    HttpCookie CurrentCookie { get; set; }
-    //    Url Url { get; set; }
-    //    public CookieGrammar(Url url, string name, string value)
-    //    {
-    //        this.Url = url;
-    //        this.CurrentCookie = new HttpCookie {Name = name, Value = value};
-    //        this.Url.Model.Cookies.Add(this.CurrentCookie);
-    //    }
-
-    //    public Url And { get { return this.Url; } }
-
-    //    public CookieGrammar ExpiryDate(DateTime expiry)
-    //    {
-    //        this.CurrentCookie.Expiry = expiry;
-    //        return this;
-    //    }
-    //}
 }
 
 /*

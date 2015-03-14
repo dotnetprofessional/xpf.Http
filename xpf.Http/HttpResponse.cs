@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using xpf.Http.Original;
 
 namespace xpf.Http
@@ -8,14 +9,16 @@ namespace xpf.Http
     public class HttpResponse<T>
     {
         UriDetail _detail;
+        NavigationContext Parent { get; set; }
 
-        public HttpResponse(string url, HttpStatusCode statusCode, T content, string error, string rawContent)
+        public HttpResponse(NavigationContext parent, HttpStatusCode statusCode, T content, string error, string rawContent)
         {
-            this.Headers = new Dictionary<string, HttpHeader>();
+            this.Headers = new HttpHeaderCollection();
+            this.Parent = parent;
             this.StatusCode = statusCode;
             this.Content = content;
             this.Error = error;
-            this.Url = url;
+            this.Url = parent.Model.Url;
             this.RawContent = rawContent;
             this.Cookies = new HttpCookieCollection();
         }
@@ -30,7 +33,7 @@ namespace xpf.Http
 
         public string Error { get; set; }
 
-        public Dictionary<string, HttpHeader> Headers { get; set; }
+        public HttpHeaderCollection Headers { get; set; }
 
         public string RawContent { get; private set; }
 
@@ -59,6 +62,35 @@ namespace xpf.Http
             }
 
             throw new ArgumentException("Scrape is only supported with a StatusCode of OK (200)");
+        }
+
+        public NavigationContext Navigate()
+        {
+            return this.Navigate(this.Parent.Model.Url);
+        }
+
+        public NavigationContext Navigate(string url)
+        {
+            var currentModel = this.Parent.Model;
+            // Clear out the existing model ready for the new request
+            this.Parent.Model = new HttpRequest();
+
+            var model = this.Parent.Model;
+            model.Url = url;
+            this.Parent.MessageHandler = null;
+
+            // Copy all of the relevant details from the previous response to the model
+            if (currentModel.Headers.Contains("User-Agent")) model.Headers.Add(currentModel.Headers["User-Agent"]);
+            if (this.Headers.Contains("Accept")) model.Headers.Add(this.Headers["Accept"]);
+            if (this.Headers.Contains("Content-Type")) model.Headers.Add(this.Headers["Content-Type"]);
+            
+            // Set the referrer
+            this.Parent.WithReferrer(currentModel.Url);
+
+            foreach (var c in this.Cookies)
+                model.Cookies.Add(c);
+
+            return this.Parent;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace xpf.Http.Extensions
 {
     public static class ShrinkTheWeb
     {
-        public static string GetThumbnailUrl(this Url uri, ThumbnailSize size = ThumbnailSize.Large200x150)
+        public static string GetThumbnailUrl(this NavigationContext uri, ThumbnailSize size = ThumbnailSize.Large200x150)
         {
             string sizeCode = "";
             switch (size)

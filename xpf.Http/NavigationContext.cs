@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -9,19 +10,21 @@ using xpf.Http.Original;
 
 namespace xpf.Http
 {
-    public class Url
+    public class NavigationContext
     {
-        public Url(HttpMessageHandler messageHandler, string url)
+        public NavigationContext(HttpMessageHandler messageHandler, string url)
         {
             this.MessageHandler = messageHandler;
             this.Model = new HttpRequest {Url = url};
             this.RequestContentType = new RequestContentTypes(this, e => this.Model.RequestContentType = e);
             this.ResponseContentType = new RequestContentTypes(this, e => this.Model.ResponseContentType= e);
             this.Encoding = new EncodingTypes(this);
-
+            this.UserAgent = new UserAgents(this);
         }
 
-        public HttpRequest Model { get; private set; }
+        public UserAgents UserAgent { get; set; }
+
+        public HttpRequest Model { get; internal set; }
 
         HttpClient initializeClientHttpHandler()
         {
@@ -42,20 +45,26 @@ namespace xpf.Http
             return client;
         }
 
-        HttpMessageHandler MessageHandler { get; set; }
+        internal HttpMessageHandler MessageHandler { get; set; }
         public RequestContentTypes RequestContentType { get; private set; }
 
         public RequestContentTypes ResponseContentType { get; private set; }
 
         public EncodingTypes Encoding{ get; private set; }
 
-        public Url WithoutRedirect
+        public NavigationContext WithoutRedirect
         {
             get
             {
                 this.Model.AllowAutoRedirect = false;
                 return this;
             }
+        }
+
+        public NavigationContext WithReferrer(string referrer)
+        {
+            this.Model.Headers.Add(new HttpHeader {Key = "Referer", Value = new[] {referrer}});
+            return this;
         }
 
         public async Task<HttpResponse<TR>> PostAsync<TR>()
@@ -87,35 +96,32 @@ namespace xpf.Http
         async Task<HttpResponse<TR>> ProcessResponse<TR>(HttpResponseMessage response)
         {
             string error = "";
+            string decoded = "";
             var result = default(TR);
-            var rawContent = await new StreamReader(await response.Content.ReadAsStreamAsync()).ReadToEndAsync();
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 // If an encoding has been specified make use of that to first decode the data
                 // before attempting to convert the type
                 // TOOD: Should probably look at the response headers content-encoding/content-type to determine how to work with the response
-                var decoded = rawContent;
-                foreach(var h in response.Headers)
-                    if (h.Key == "Content-Type")
-                    {
-                        var value = new List<string>(h.Value)[0];
-
-                        // Find a matching content type decoder
-                        foreach (var c in this.Model.KnownContentTypes)
-                            if (c.ContentType == value)
-                                this.Model.ResponseContentType = c;
-                        break;
-                    }
-                if (this.Model.Encoding != null)
-                    decoded = this.Model.Encoding.Decode(decoded);
+                var contentTypeHeader = response.Headers.FirstOrDefault(h => h.Key == "Content-Type");
+                if (contentTypeHeader.Key != null)
+                {
+                    var contentType = new List<string>(contentTypeHeader.Value)[0];
+                    // Find a matching content type decoder
+                    var encoder = this.Model.KnownContentTypes[contentType];
+                    if (encoder != null)
+                        this.Model.ResponseContentType = encoder;
+                }
+                decoded = await this.Model.Encoding.Decode(await response.Content.ReadAsStreamAsync());
 
                 result = this.Model.ResponseContentType.Deserialize<TR>(decoded);
             }
             else
-                error = rawContent;
+                // Read directly from the stream as a string as errors are not typically encoded in anything other than plain text
+                error = await new NullEncoder().Decode(await response.Content.ReadAsStreamAsync());
 
             // Depending on the format c
-            var requestResponse = new HttpResponse<TR>(this.Model.Url, response.StatusCode, result, error, rawContent);
+            var requestResponse = new HttpResponse<TR>(this, response.StatusCode, result, error, decoded);
             foreach (var header in response.Headers)
             {
                 if (header.Key == "Set-Cookie")
@@ -124,7 +130,7 @@ namespace xpf.Http
                     requestResponse.Cookies.AddRange(cookies);
                 }
                 else
-                    requestResponse.Headers.Add(header.Key, new HttpHeader {Key = header.Key, Value = new List<string>(header.Value)});
+                    requestResponse.Headers.Add(new HttpHeader {Key = header.Key, Value = new List<string>(header.Value)});
             }
 
             return requestResponse;
@@ -136,17 +142,17 @@ namespace xpf.Http
 
             client.DefaultRequestHeaders.ExpectContinue = this.Model.EnableExpectContinue;
 
-            StringContent content = null;
+            System.Net.Http.StringContent content = null;
             // Check that Forms data and raw data have not both been set. As you can't have both
             if(this.Model.FormValues.Count != 0 && this.Model.Data != null)
                 throw new ArgumentException("Setting both FormValues and Data is not supported. Only one can be set at a time.");
 
             if (this.Model.FormValues.Count > 0)
             {
-                this.Model.RequestContentType = new FormEncoder();
+                this.Model.RequestContentType = new FormContent();
                 this.Model.Data = this.Model.FormValues;
             }
-            content = new StringContent(this.Model.RequestContentType.Serialize(this.Model.Data ?? ""));
+            content = new System.Net.Http.StringContent(this.Model.RequestContentType.Serialize(this.Model.Data ?? ""));
 
             foreach (HttpHeader h in this.Model.Headers)
             {
@@ -168,7 +174,6 @@ namespace xpf.Http
 
                 clientHandler.AllowAutoRedirect = this.Model.AllowAutoRedirect;
             }
-
             // Set the value of content to the model 
             this.Model.Content = content;
             return client;
@@ -183,24 +188,24 @@ namespace xpf.Http
             }
             return httpCookies;
         }
-        public Url WithHeader(string name, IEnumerable<string> value)
+        public NavigationContext WithHeader(string name, IEnumerable<string> value)
         {
             this.Model.Headers.Add(new HttpHeader{Key = name, Value = value});
             return this;
         }
 
-        public Url WithCookie(string name, string value, DateTime expiry = default(DateTime), string domain = null, string path = null)
+        public NavigationContext WithCookie(string name, string value, DateTime expiry = default(DateTime), string domain = null, string path = null)
         {
             return this.WithCookie(new HttpCookie { Domain = domain, Name = name, Value = value, Expiry = expiry, Path = path });
         }
 
-        public Url WithCookie(HttpCookie cookie)
+        public NavigationContext WithCookie(HttpCookie cookie)
         {
             this.Model.Cookies.Add(cookie);
             return this;
         }
 
-        public Url WithFormValue(string name, string value)
+        public NavigationContext WithFormValue(string name, string value)
         {
             this.Model.FormValues.Add(new HttpFormValue {Key = name, Value = value});
             return this;

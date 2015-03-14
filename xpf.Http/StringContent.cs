@@ -1,6 +1,6 @@
 namespace xpf.Http
 {
-    public class StringEncoder : IContentType
+    public class StringContent : IContentType
     {
         public string ContentType
         {

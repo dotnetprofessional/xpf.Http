@@ -1,30 +1,33 @@
 using System;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
 
 namespace xpf.Http
 {
     public class Base64Encoder : IEncodeData
     {
-        public string ContentType
-        {
-            get { return "text/html"; }
-        }
-
         public string ContentEncoding
         {
-            get { throw new NotImplementedException(); }
+            get { return "base64"; }
         }
 
-        public string Encode(string data)
+        public async Task<Stream> Encode(string data)
         {
-            var bytesToEncode = Encoding.Unicode.GetBytes(data as string);
-            return Convert.ToBase64String(bytesToEncode);
+            var stream = new MemoryStream();
+            using (var streamWriter = new StreamWriter(new MemoryStream()))
+            {
+                await streamWriter.WriteAsync(data);
+            }
+
+            return stream;
         }
 
-        public string Decode(string data)
+        public async Task<string> Decode(Stream data)
         {
-            var decodedBytes = Convert.FromBase64String(data);
-            return Encoding.Unicode.GetString(decodedBytes, 0, decodedBytes.Length);
+            return await new StreamReader(data).ReadToEndAsync();
         }
     }
 }
+

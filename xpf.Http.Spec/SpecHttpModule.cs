@@ -28,13 +28,13 @@ namespace xpf.Http.Spec
             Get["/basic-url-that-returns-a-simple-base64-document"] = delegate
             {
                 var encoder = new Base64Encoder();
-                return encoder.Encode("base64 Text");
+                return encoder.Encode("base64 Text").Result;
             };
 
             Get["/basic-url-that-returns-a-simple-xml-document"] = p =>
             {
                 var c = new Customer {Name = "Test", Phone = "12345678"};
-                var encoder = new XmlEncoder();
+                var encoder = new XmlContent();
 
                 var r = new Response
                 {

@@ -15,8 +15,8 @@ namespace xpf.Http
         public string Serialize<T>(T data)
         {
             var formDataItems = new List<string>();
-            foreach (var f in (List<HttpFormValue>)(object)data)
-                formDataItems.Add(string.Format("{0}={1}", f.Key, WebUtility.UrlEncode(f.Value)));
+            foreach (var f in (List<HttpFormValue>) (object) data)
+                formDataItems.Add(string.Format("{0}={1}", f.Key, f.Encode ? WebUtility.UrlEncode(f.Value) : f.Value));
 
             var formString = string.Join("&", formDataItems);
 

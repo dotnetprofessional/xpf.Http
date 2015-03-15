@@ -205,9 +205,9 @@ namespace xpf.Http
             return this;
         }
 
-        public NavigationContext WithFormValue(string name, string value)
+        public NavigationContext WithFormValue(string name, string value, bool encode = true)
         {
-            this.Model.FormValues.Add(new HttpFormValue {Key = name, Value = value});
+            this.Model.FormValues.Add(new HttpFormValue {Key = name, Value = value, Encode = encode});
             return this;
         }
 

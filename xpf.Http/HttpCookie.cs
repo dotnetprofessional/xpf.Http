@@ -25,6 +25,12 @@ namespace xpf.Http
                     case "domain":
                         this.Domain = keyValues[1];
                         break;
+                    case "secure":
+                        this.IsSecure = true;
+                        break;
+                    case "HttpOnly":
+                        this.IsHttpOnly = true;
+                        break;
                     default:
                         this.Name = keyValues[0];
                         this.Value = keyValues[1];
@@ -32,6 +38,10 @@ namespace xpf.Http
                 }
             }
         }
+
+        public bool IsHttpOnly { get; set; }
+
+        public bool IsSecure { get; set; }
 
         public string Name { get; set; }
 

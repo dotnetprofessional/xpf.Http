@@ -14,5 +14,7 @@ namespace xpf.Http.Original
         public string Key { get; set; }
 
         public string Value { get; set; }
+
+        public bool Encode { get; set; }
     }
 }

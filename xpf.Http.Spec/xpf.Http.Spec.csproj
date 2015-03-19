@@ -95,7 +95,6 @@
     <Compile Include="HttpGetSpec.cs" />
     <Compile Include="NancyTesting.cs" />
     <Compile Include="SpecHttpModule.cs" />
-    <Compile Include="Story_Reuse_Code.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestModels\Customer.cs" />
   </ItemGroup>
@@ -109,9 +108,6 @@
       <Project>{71195711-657d-461b-b3b8-78d4c1b57470}</Project>
       <Name>xpf.Http</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

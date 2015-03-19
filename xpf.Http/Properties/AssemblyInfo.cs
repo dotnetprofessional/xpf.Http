@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("dotNetProfessional")]
 [assembly: AssemblyProduct("xpf.Http")]
-[assembly: AssemblyCopyright("Copyright © dotNetProfessional.com 2014")]
+[assembly: AssemblyCopyright("Copyright © dotNetProfessional.com 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
@@ -26,5 +26,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.0.1.7")]
-[assembly: AssemblyFileVersion("0.0.1.7")]
+[assembly: AssemblyVersion("0.0.1.8")]
+[assembly: AssemblyFileVersion("0.0.1.8")]

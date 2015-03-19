@@ -43,7 +43,7 @@ namespace xpf.Http
             // Use above sampel to rewrite this taking advantage of the groups names. This needs its own method
             var foundValues = new ExpressionGroupCollection();
 
-            Regex regex = new Regex(expression);
+            Regex regex = new Regex(expression, RegexOptions.IgnoreCase | RegexOptions.Multiline);
             List<string> groupNames = new List<string>();
             int index = 1;
             bool nameNotFound = false;

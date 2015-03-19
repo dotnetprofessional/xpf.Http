@@ -50,7 +50,6 @@ namespace xpf.Http.Spec
             It should_have_the_correct_Url_in_response = () => Result.Url.Should().BeEquivalentTo(Url);
 
             It should_have_a_valid_details = () => Result.Detail.Should().NotBeNull();
-            It should_have_correct_Url_in_detail = () => Result.Detail.Url.Should().BeEquivalentTo(Url);
             It should_have_no_title_in_detail = () => Result.Detail.Title.Should().BeEmpty();
             It should_have_no_description_in_detail = () => Result.Detail.Description.Should().BeEmpty();
             It should_have_no_keywords_in_detail = () => Result.Detail.Keywords.Should().BeEmpty();

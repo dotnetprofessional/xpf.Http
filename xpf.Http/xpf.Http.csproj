@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base64Encoder.cs" />
+    <Compile Include="HtmlLocator.cs" />
     <Compile Include="NullEncoder.cs" />
     <Compile Include="EncodingExtensions.cs" />
     <Compile Include="EncodingTypes.cs" />
@@ -63,7 +64,7 @@
     <Compile Include="RequestContentTypes.cs" />
     <Compile Include="Scrape.cs" />
     <Compile Include="StringContent.cs" />
-    <Compile Include="UriDetail.cs">
+    <Compile Include="PageDetail.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

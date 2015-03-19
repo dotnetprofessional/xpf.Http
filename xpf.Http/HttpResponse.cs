@@ -8,7 +8,7 @@ namespace xpf.Http
 {
     public class HttpResponse<T>
     {
-        UriDetail _detail;
+        PageDetail<T> _detail;
         NavigationContext Parent { get; set; }
 
         public HttpResponse(NavigationContext parent, HttpStatusCode statusCode, T content, string error, string rawContent)
@@ -37,12 +37,12 @@ namespace xpf.Http
 
         public string RawContent { get; private set; }
 
-        public UriDetail Detail
+        public PageDetail<T> Detail
         {
             get
             {
                 if (this._detail == null)
-                    this._detail = new UriDetail(this.Url, this.RawContent);
+                    this._detail = new PageDetail<T>(this);
 
                 return this._detail;
             }

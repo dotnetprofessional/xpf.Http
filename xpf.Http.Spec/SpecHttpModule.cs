@@ -17,7 +17,7 @@ namespace xpf.Http.Spec
         {
             Get["/When_requesting_a_valid_url_that_is_not_a_html_page_as_text"] = _ => "this is simple text";
 
-            Get["/basic-url-that-returns-a-simple-string"] = _ => "this is simple text";
+            Get["/basic-url-that-returns-a-simple-html-body"] = _ => "<html><meta name=\"description\" content=\"test description\" <title>test title</title> /></html>";
             
             Get["/basic-url-that-returns-a-simple-json-document"] = delegate
             {

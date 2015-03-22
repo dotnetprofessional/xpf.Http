@@ -23,7 +23,7 @@ namespace xpf.Http.Spec
 
         [Given(@"The the URL below which is valid
                 '''
-                /basic-url-that-returns-a-simple-string
+                /basic-url-that-returns-a-simple-html-body
                 '''")]
         public class When_requesting_a_basic_url_that_returns_a_simple_string
         {
@@ -45,13 +45,13 @@ namespace xpf.Http.Spec
 
             It should_have_status_code_of_OK = () => Result.StatusCode.Should().Be(HttpStatusCode.OK);
             It should_not_have_an_error_set = () => Result.Error.Should().BeEmpty();
-            It should_return_the_contents_of_the_Url = () => Result.Content.Should().Be("this is simple text");
+            It should_return_the_contents_of_the_Url = () => Result.Content.Should().Be("<html><meta name=\"description\" content=\"test description\" <title>test title</title> /></html>");
             It should_not_have_any_headers = () => Result.Headers.Count.Should().Be(0);
             It should_have_the_correct_Url_in_response = () => Result.Url.Should().BeEquivalentTo(Url);
 
             It should_have_a_valid_details = () => Result.Detail.Should().NotBeNull();
-            It should_have_no_title_in_detail = () => Result.Detail.Title.Should().BeEmpty();
-            It should_have_no_description_in_detail = () => Result.Detail.Description.Should().BeEmpty();
+            It should_have_no_title_in_detail = () => Result.Detail.Title.Should().Be("test title");
+            It should_have_no_description_in_detail = () => Result.Detail.Description.Should().Be("test description");
             It should_have_no_keywords_in_detail = () => Result.Detail.Keywords.Should().BeEmpty();
             It should_not_support_flash_in_detail = () => Result.Detail.SupportsFlash.Should().BeFalse();
         }

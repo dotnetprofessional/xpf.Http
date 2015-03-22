@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace xpf.Http
@@ -9,7 +10,8 @@ namespace xpf.Http
         string Expression { get; set; }
         string Content { get; set; }
 
-        ExpressionGroupCollection Results { get; set; }
+        Dictionary<string, string> GroupsReferenced = new Dictionary<string, string>();
+            List<ExpressionGroupCollection> Results { get; set; }
 
         public Scrape(string expression, string content)
         {
@@ -27,9 +29,31 @@ namespace xpf.Http
             return this;
         }
 
-        public ExpressionGroupCollection Result()
+        public List<ExpressionGroupCollection> ResultByMatch()
         {
             return this.Results;
+        }
+
+        public ExpressionGroupCollection ResultByGroup()
+        {
+            var expressionGroups = new ExpressionGroupCollection();
+
+            // Create all the referenced groups with no values first
+            // This makes using the result easier as the caller need not check 
+            // if the group exists.
+
+            foreach(var g in this.GroupsReferenced)
+                expressionGroups.Add(new ExpressionGroup{Name = g.Value});
+
+            foreach (var m in this.Results)
+            {
+                foreach (var g in m)
+                {
+                    var existingGroup = expressionGroups.FirstOrDefault(groups => groups.Name == g.Name);
+                    existingGroup.Values.AddRange(g.Values);
+                }
+            }
+            return expressionGroups;
         }
 
         /// <summary>
@@ -37,11 +61,11 @@ namespace xpf.Http
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        ExpressionGroupCollection ScrapExpression(string expression)
+        List<ExpressionGroupCollection> ScrapExpression(string expression)
         {
             // https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regex.groupnamefromnumber(v=vs.110).aspx
             // Use above sampel to rewrite this taking advantage of the groups names. This needs its own method
-            var foundValues = new ExpressionGroupCollection();
+            var matchesFound = new List<ExpressionGroupCollection>();
 
             Regex regex = new Regex(expression, RegexOptions.IgnoreCase | RegexOptions.Multiline);
             List<string> groupNames = new List<string>();
@@ -55,6 +79,8 @@ namespace xpf.Http
                 {
                     index++;
                     groupNames.Add(name);
+                    if(!this.GroupsReferenced.ContainsKey(name))
+                        this.GroupsReferenced.Add(name,name);
                 }
                 else
                 {
@@ -63,28 +89,26 @@ namespace xpf.Http
             } while (!nameNotFound);
 
 
-            var match = regex.Matches(this.Content);
-            foreach (string group in groupNames)
+            var matches = regex.Matches(this.Content);
+            for (int i = 0; i < matches.Count; i++)
             {
-                var expressionGroup = new ExpressionGroup();
-                // Incase a subsequent expression uses the same group name use the previous collection
-                if (this.Results != null && this.Results.Contains(group))
-                    expressionGroup = this.Results[group];
-
-                expressionGroup.Name = group;
-                if (match.Count > 0)
-                    for (int i = 0; i < match.Count; i++)
+                var expressionGroups = new ExpressionGroupCollection();
+                foreach (string group in groupNames)
+                {
+                    // Incase a subsequent expression uses the same group name use the previous collection
+                    var expressionGroup = new ExpressionGroup();
+                    expressionGroup.Name = group;
+                    var values = matches[i].Groups[group];
+                    for (int c = 0; c < values.Captures.Count; c++)
                     {
-                        var values = match[i].Groups[group];
-                        for (int c = 0; c < values.Captures.Count; c++)
-                        {
-                            expressionGroup.Values.Add(values.Captures[c].Value);
-                        }
+                        expressionGroup.Values.Add(values.Captures[c].Value);
                     }
-                foundValues.Add(expressionGroup);
+                    expressionGroups.Add(expressionGroup);
+                }
+                matchesFound.Add(expressionGroups);
             }
 
-            return foundValues;
+            return matchesFound;
         }
 
     }

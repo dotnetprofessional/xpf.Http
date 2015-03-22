@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
-using xpf.Http.Original;
 
 namespace xpf.Http.Extensions
 {
@@ -21,7 +19,7 @@ namespace xpf.Http.Extensions
             if (fisrtRequest.StatusCode == HttpStatusCode.OK | fisrtRequest.StatusCode == HttpStatusCode.Redirect)
             {
                 var classificationsResult = fisrtRequest.Scrape("labeltitlesmallresult\">(?<classification>\\w*)")
-                    .And("labeltitleresult\">(?<security>\\w*)").Result();
+                    .And("labeltitleresult\">(?<security>\\w*)").ResultByGroup();
 
                 var classification = new WebSiteClassification();
                 var security = classificationsResult["security"].Values[0];

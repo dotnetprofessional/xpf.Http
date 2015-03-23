@@ -12,7 +12,18 @@ namespace xpf.Http
 
         public string Name { get; set; }
 
-        public List<string> Values { get; set; } 
+        public List<string> Values { get; set; }
+
+        public string SafeValue
+        {
+            get
+            {
+                if (this.Values.Count > 0)
+                    return this.Values[0];
+                else
+                    return "";
+            }
+        }
     }
 
     public class ExpressionGroupCollection : KeyedCollection<string, ExpressionGroup>

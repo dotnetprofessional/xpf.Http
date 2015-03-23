@@ -92,6 +92,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="FeatureAttribute.cs" />
+    <Compile Include="HtmlLocatorSpec.cs" />
     <Compile Include="HttpGetSpec.cs" />
     <Compile Include="NancyTesting.cs" />
     <Compile Include="SpecHttpModule.cs" />

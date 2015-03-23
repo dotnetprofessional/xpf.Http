@@ -26,7 +26,7 @@ namespace xpf.Http
         /// This method does not support returning nested tags. If a tag has another tag has nested tags
         /// then value will return as an empty string.
         /// </remarks>
-        public string Name(string name)
+        public HttpElement Name(string name)
         {
             // <(?<type>[^\s]*)\sname="description"(?<attributes>[^>]*)>(?<text>[^<]*)
             //<(?<type>[^\s]*)(?<attributes2>[^"]*)?(?:name|id)="(?<id>[^"]*)"(?<attributes>[^/>]*)/?>(?<text>[^<]*)
@@ -37,22 +37,35 @@ namespace xpf.Http
             var value = this.Response.Scrape(string.Format(regEx, name)).ResultByMatch();
 
             // extract any matches
-            for (int i = 0; i < value.Count; i++)
+            foreach (var match in value)
             {
-                //var element = new HttpElement(value["id"].Values[0]);
+                // There are a number of groups needed to build the element
+                var type = match["type"].SafeValue;
+                var attributesLeft = match["attributesLeft"].SafeValue;
+                var attributesRight = match["attributesRight"].SafeValue;
+                var text = match["text"].SafeValue;
+
+                var element = new HttpElement(name, text, type, attributesLeft + attributesRight);
+                return element;
             }
 
-            return "";
+            return null;
         }
     }
 
     public class HttpElement
     {
-        public HttpElement(string id, string text, string type, string attributres)
+        public HttpElement(string id, string text, string type, string attributes)
         {
+            this.Attributes = new HttpAttributeCollection();
             this.Id = id;
             this.Text = text;
             this.Type = type;
+
+            // Process the attributes
+            var attributeParts = new Scrape("(?<name>[^=]*)[=\\s\"]*(?<value>[^\"]*)\"", attributes).ResultByMatch();
+            foreach(var m in attributeParts)
+                this.Attributes.Add(new HttpAttribute{Name = m["name"].SafeValue, Value = m["value"].SafeValue});
         }
 
         public HttpElement()
@@ -78,7 +91,7 @@ namespace xpf.Http
     {
         protected override string GetKeyForItem(HttpAttribute item)
         {
-            throw new NotImplementedException();
+            return item.Name;
         }
     }
 }

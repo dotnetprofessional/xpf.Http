@@ -11,6 +11,10 @@ namespace xpf.Http
         PageDetail<T> _detail;
         NavigationContext Parent { get; set; }
 
+        public HttpResponse()
+        {
+        }
+
         public HttpResponse(NavigationContext parent, HttpStatusCode statusCode, T content, string error, string rawContent)
         {
             this.Headers = new HttpHeaderCollection();
@@ -27,7 +31,7 @@ namespace xpf.Http
 
         public string Url { get; private set; }
 
-        public HttpStatusCode StatusCode { get; private set; }
+        public HttpStatusCode StatusCode { get; set; }
 
         public T Content { get; private set; }
 
@@ -35,7 +39,7 @@ namespace xpf.Http
 
         public HttpHeaderCollection Headers { get; set; }
 
-        public string RawContent { get; private set; }
+        public string RawContent { get; set; }
 
         public PageDetail<T> Detail
         {

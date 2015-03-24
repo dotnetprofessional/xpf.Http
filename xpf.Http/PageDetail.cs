@@ -14,9 +14,9 @@
                 .ResultByGroup();
 
             // Reset other fields to empty strings rather than have them as nulls
-            this.Title = details["title"].Values.Count > 0 ? details["title"].Values[0] : "";
-            this.Description = details["description"].Values.Count > 0 ? details["description"].Values[0] : "";
-            this.Keywords = details["keywords"].Values.Count > 0 ? details["keywords"].Values[0] : "";
+            this.Title = details["title"].SafeValue;
+            this.Description = details["description"].SafeValue;
+            this.Keywords = details["keywords"].SafeValue;
             this.SupportsFlash = details["flash"].Values.Count > 0;
         }
 

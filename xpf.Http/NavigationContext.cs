@@ -20,7 +20,10 @@ namespace xpf.Http
             this.ResponseContentType = new RequestContentTypes(this, e => this.Model.ResponseContentType= e);
             this.Encoding = new EncodingTypes(this);
             this.UserAgent = new UserAgents(this);
+            this.ClientIpFrom = new IpForwarding(this);
         }
+
+        public IpForwarding ClientIpFrom { get; set; }
 
         public UserAgents UserAgent { get; set; }
 

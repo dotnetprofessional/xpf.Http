@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using xpf.Http.Original;
@@ -87,6 +88,9 @@ namespace xpf.Http
             if (currentModel.Headers.Contains("User-Agent")) model.Headers.Add(currentModel.Headers["User-Agent"]);
             if (this.Headers.Contains("Accept")) model.Headers.Add(this.Headers["Accept"]);
             if (this.Headers.Contains("Content-Type")) model.Headers.Add(this.Headers["Content-Type"]);
+            var clientIpHeaders = currentModel.Headers.Where(h => h.Key.Contains("Forward") || h.Key.Contains("Client")).ToList();
+            if(clientIpHeaders != null && clientIpHeaders.Count > 0)
+                model.Headers.AddRange(clientIpHeaders);
             
             // Set the referrer
             this.Parent.WithReferrer(currentModel.Url);

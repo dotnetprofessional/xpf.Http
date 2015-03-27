@@ -11,6 +11,7 @@ namespace xpf.Http.Extensions
             var fisrtRequest = await http.Navigate("http://global.sitesafety.trendmicro.com/index.php")
                 .UserAgent.IE11
                 .WithoutRedirect
+                .ClientIpFrom.Austrlia
                 .GetAsync<string>().Result.Navigate("http://global.sitesafety.trendmicro.com/result.php")
                 .WithFormValue("urlname", navigationContext.Model.Url)
                 .WithFormValue("getinfo", "Check Now")

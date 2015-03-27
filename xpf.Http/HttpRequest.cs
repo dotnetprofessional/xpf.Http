@@ -14,6 +14,7 @@ namespace xpf.Http
             this.Headers.Add(new HttpHeader {Key = "Accept", Value = new [] {"text/html"}});
             //this.Headers.Add(new HttpHeader {Key = "Accept-Encoding", Value = new List<string> {"gzip, deflate"}});
             this.AllowAutoRedirect = true;
+            this.EnableExpectContinue = true;
 
             this.RequestContentType = new StringContent();
             this.ResponseContentType= new StringContent();

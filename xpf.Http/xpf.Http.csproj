@@ -43,6 +43,7 @@
     <Compile Include="Base64Encoder.cs" />
     <Compile Include="GzipEncoder.cs" />
     <Compile Include="HtmlLocator.cs" />
+    <Compile Include="IAuthenticationProvider.cs" />
     <Compile Include="IpForwarding.cs" />
     <Compile Include="NullEncoder.cs" />
     <Compile Include="EncodingExtensions.cs" />

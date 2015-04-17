@@ -20,6 +20,7 @@ namespace xpf.Http
             this.ResponseContentType = new RequestContentTypes(this, e => this.Model.ResponseContentType= e);
             this.Encoding = new EncodingTypes(this);
             this.UserAgent = new UserAgents(this);
+            this.Authentication = new AuthenticationProviders(this);
             this.ClientIpFrom = new IpForwarding(this);
         }
 
@@ -55,6 +56,7 @@ namespace xpf.Http
 
         public EncodingTypes Encoding{ get; private set; }
 
+        public AuthenticationProviders Authentication { get; private set; }
         public NavigationContext WithoutRedirect
         {
             get
@@ -130,7 +132,13 @@ namespace xpf.Http
                 if (header.Key == "Set-Cookie")
                 {
                     var cookies = this.ExtractCookies(header.Value);
-                    requestResponse.Cookies.AddRange(cookies);
+                    foreach (var c in cookies)
+                    {
+                        if (requestResponse.Cookies.Contains(c.Name))
+                            requestResponse.Cookies.Remove(c.Name);
+
+                        requestResponse.Cookies.Add(c);
+                    }
                 }
                 else
                     requestResponse.Headers.Add(new HttpHeader {Key = header.Key, Value = new List<string>(header.Value)});
@@ -211,6 +219,9 @@ namespace xpf.Http
 
         public NavigationContext WithCookie(HttpCookie cookie)
         {
+            if (this.Model.Cookies.Contains(cookie.Name))
+                this.Model.Cookies.Remove(cookie.Name);
+
             this.Model.Cookies.Add(cookie);
             return this;
         }
@@ -221,5 +232,32 @@ namespace xpf.Http
             return this;
         }
 
+    }
+
+    public class AuthenticationProviders : IRequireNavigationContext
+    {
+        public AuthenticationProviders(NavigationContext parent)
+        {
+            ((IRequireNavigationContext)this).NavigationContext = parent;
+            this.Parent = parent;
+        }
+
+
+        public NavigationContext WithAcsToken(BearerToken token)
+        {
+            this.SetBearerToken(token);
+            return this.Parent;
+        }
+
+        void SetBearerToken(BearerToken token)
+        {
+            if (this.Parent.Model.Headers.Contains("Authorization"))
+                throw new ArgumentException("A token has already been assigned to this request.");
+
+            this.Parent.WithHeader("Authorization", "bearer " + token.Token);
+        }
+
+        NavigationContext Parent { get; set; }
+        NavigationContext IRequireNavigationContext.NavigationContext { get; set; }
     }
 }

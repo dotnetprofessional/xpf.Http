@@ -200,5 +200,34 @@ namespace xpf.Http.Spec
             It should_include_all_headers = () => Result.Cookies.Count.Should().Be(4);
             It should_include_additional_header = () => Result.Content.Should().Contain("set cookies");
         }
+
+        [Given(@"The the URL below which which supports gzip encoding
+                '''
+                http://www.microsoft.com/zh-cn/default.aspx
+                '''")]
+        public class When_requesting_a_url_with_gzip_encoding
+        {
+            static LiveDocScenario Scenario;
+            Establish given = () =>
+            {
+                Scenario = new LiveDocScenario(typeof(When_requesting_a_url_with_gzip_encoding));
+            };
+
+            static HttpResponse<string> Result;
+            static string Url;
+
+            Because when = () =>
+            {
+                Url = Scenario.Given.DocString;
+                var http = new Http();
+                Result = http.Navigate(Url).Encoding.Gzip.GetAsync<string>().Result;
+            };
+
+            It should_have_status_code_of_OK = () => Result.StatusCode.Should().Be(HttpStatusCode.OK);
+            It should_have_return_uncompressed_result = () =>
+            {
+                Result.RawContent.Should().Match(r => r.Contains("html"));
+            };
+        }
     }
 }

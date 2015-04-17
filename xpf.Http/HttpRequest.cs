@@ -11,8 +11,6 @@ namespace xpf.Http
             this.Headers = new HttpHeaderCollection();
             this.Cookies = new HttpCookieCollection();
             this.FormValues = new List<HttpFormValue>();
-            this.Headers.Add(new HttpHeader {Key = "Accept", Value = new [] {"text/html"}});
-            //this.Headers.Add(new HttpHeader {Key = "Accept-Encoding", Value = new List<string> {"gzip, deflate"}});
             this.AllowAutoRedirect = true;
             this.EnableExpectContinue = true;
 

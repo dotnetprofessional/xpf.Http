@@ -8,7 +8,7 @@ namespace xpf.Http
     {
         public string ContentEncoding
         {
-            get { return "text"; }
+            get { return "text/html"; }
         }
 
         public async Task<Stream> Encode(string data)

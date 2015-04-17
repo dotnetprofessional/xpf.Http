@@ -159,7 +159,8 @@ namespace xpf.Http
 
             foreach (HttpHeader h in this.Model.Headers)
             {
-                client.DefaultRequestHeaders.Add(h.Key, h.Value);
+                var value = h.Value.First();
+                client.DefaultRequestHeaders.Add(h.Key, value);
             }
             content.Headers.ContentType = new MediaTypeHeaderValue(this.Model.RequestContentType.ContentType);
             // Can't work out how to get the TestServer to support cookies
@@ -191,6 +192,12 @@ namespace xpf.Http
             }
             return httpCookies;
         }
+
+        public NavigationContext WithHeader(string name, string value)
+        {
+            return this.WithHeader(name, new[] {value});
+        }
+
         public NavigationContext WithHeader(string name, IEnumerable<string> value)
         {
             this.Model.Headers.Add(new HttpHeader{Key = name, Value = value});

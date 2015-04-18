@@ -96,7 +96,12 @@ namespace xpf.Http
             this.Parent.WithReferrer(currentModel.Url);
 
             foreach (var c in this.Cookies)
+            {
+                if (model.Cookies.Contains(c.Name))
+                    model.Cookies.Remove(c.Name);
+
                 model.Cookies.Add(c);
+            }
 
             return this.Parent;
         }

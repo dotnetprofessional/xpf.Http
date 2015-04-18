@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace xpf.Http
 {
@@ -11,31 +12,41 @@ namespace xpf.Http
         public HttpCookie(string rawCookie)
         {
             var headerParts = rawCookie.Split(';');
-            foreach (var h in headerParts)
+            for (int i = 0; i < headerParts.Length; i++)
             {
-                var keyValues = h.Split('=');
-                switch (keyValues[0].Trim())
+                var name = headerParts[i].Substring(0, headerParts[i].IndexOf('='));
+                var value = headerParts[i].Substring(name.Length + 1);
+                if (i == 0)
                 {
-                    case "expires":
-                        this.Expiry = DateTime.Parse(keyValues[1]);
-                        break;
-                    case "path":
-                        this.Path = keyValues[1];
-                        break;
-                    case "domain":
-                        this.Domain = keyValues[1];
-                        break;
-                    case "secure":
-                        this.IsSecure = true;
-                        break;
-                    case "HttpOnly":
-                        this.IsHttpOnly = true;
-                        break;
-                    default:
-                        this.Name = keyValues[0];
-                        this.Value = keyValues[1];
-                        break;
+                    // The first part is always the name of the cookie
+                    this.Name = name;
+                    this.Value = value;
                 }
+                else
+                {
+                    switch (name.Trim())
+                    {
+                        case "expires":
+                            this.Expiry = DateTime.Parse(value);
+                            break;
+                        case "path":
+                            this.Path = value;
+                            break;
+                        case "domain":
+                            this.Domain = value;
+                            break;
+                        case "secure":
+                            this.IsSecure = true;
+                            break;
+                        case "HttpOnly":
+                            this.IsHttpOnly = true;
+                            break;
+                        case "Version":
+                            this.Version = value;
+                            break;
+                    }
+                }
+
             }
         }
 
@@ -47,6 +58,7 @@ namespace xpf.Http
 
         public string Value { get; set; }
 
+        public string Version { get; set; }
         public DateTime Expiry { get; set; }
 
         public bool IsExpired { get { return this.Expiry < DateTime.Now; } }
@@ -54,5 +66,7 @@ namespace xpf.Http
         public string Domain { get; set; }
 
         public string Path { get; set; }
+
+
     }
 }

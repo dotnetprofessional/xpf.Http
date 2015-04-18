@@ -26,9 +26,9 @@ namespace xpf.Http
             {
                 token = _tokens[key];
                 if (!token.HasExpired)
-                {
                     return token;
-                }
+                
+                _tokens.Remove(key);
             }
 
             // No current token so get a new one

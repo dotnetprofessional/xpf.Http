@@ -117,7 +117,12 @@ namespace xpf.Http
                     if (encoder != null)
                         this.Model.ResponseContentType = encoder;
                 }
-                decoded = await this.Model.Encoding.Decode(await response.Content.ReadAsStreamAsync());
+
+                var contentEncoding = response.Content.Headers.ContentEncoding.ToString();
+                if (!string.IsNullOrWhiteSpace(contentEncoding) && this.Model.Encoding.ContentEncoding.Contains(contentEncoding))
+                    decoded = await this.Model.Encoding.Decode(await response.Content.ReadAsStreamAsync());
+                else
+                    decoded = await new NullEncoder().Decode(await response.Content.ReadAsStreamAsync());
 
                 result = this.Model.ResponseContentType.Deserialize<TR>(decoded);
             }

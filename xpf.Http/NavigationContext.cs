@@ -80,8 +80,8 @@ namespace xpf.Http
         public async Task<HttpResponse<TR>> PostAsync<TR>(object data)
         {
             HttpResponseMessage response;
-            HttpClient client = this.InitializeClientRequest();
             this.Model.Data = data;
+            HttpClient client = this.InitializeClientRequest();
 
             response = await client.PostAsync(this.Model.Url, this.Model.Content);
 
@@ -248,7 +248,7 @@ namespace xpf.Http
         }
 
 
-        public NavigationContext WithAcsToken(BearerToken token)
+        public NavigationContext WithBearerToken(BearerToken token)
         {
             this.SetBearerToken(token);
             return this.Parent;

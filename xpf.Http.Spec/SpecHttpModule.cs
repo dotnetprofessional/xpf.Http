@@ -5,6 +5,7 @@ using Machine.Specifications.Sdk;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nancy;
 using Nancy.Cookies;
+using Nancy.ModelBinding;
 using Nancy.Responses;
 using Newtonsoft.Json;
 using xpf.Http.Spec.TestModels;
@@ -15,13 +16,15 @@ namespace xpf.Http.Spec
     {
         public SpecHttpModule()
         {
+            #region Get Methods
+
             Get["/When_requesting_a_valid_url_that_is_not_a_html_page_as_text"] = _ => "this is simple text";
 
             Get["/basic-url-that-returns-a-simple-html-body"] = _ => "<html><meta name=\"description\" content=\"test description\" <title>test title</title> /></html>";
-            
+
             Get["/basic-url-that-returns-a-simple-json-document"] = delegate
             {
-                var c = new Customer {Name = "Test", Phone = "12345678"};
+                var c = new Customer { Name = "Test", Phone = "12345678" };
                 return JsonConvert.SerializeObject(c);
             };
 
@@ -33,7 +36,7 @@ namespace xpf.Http.Spec
 
             Get["/basic-url-that-returns-a-simple-xml-document"] = p =>
             {
-                var c = new Customer {Name = "Test", Phone = "12345678"};
+                var c = new Customer { Name = "Test", Phone = "12345678" };
                 var encoder = new XmlContent();
 
                 var r = new Response
@@ -56,7 +59,7 @@ namespace xpf.Http.Spec
             {
                 // return the headers as a keyvalue pair
                 var headers = new List<string>();
-                foreach(var h in this.Request.Headers)
+                foreach (var h in this.Request.Headers)
                     headers.Add(string.Format("{0}:{1}", h.Key, h.Value));
 
                 return JsonConvert.SerializeObject(headers);
@@ -82,7 +85,21 @@ namespace xpf.Http.Spec
 
                 // set a cookie too
                 return "set cookies";
+            }; 
+
+            #endregion
+
+            #region POST Methods
+
+            Post["/basic-url-that-accepts-json-document"] = p =>
+            {
+                var c = this.Bind<Customer>();
+                if (c != null && !string.IsNullOrEmpty(c.Name))
+                    return HttpStatusCode.OK;
+                else
+                    return HttpStatusCode.Forbidden;
             };
+            #endregion
         }
     }
 }

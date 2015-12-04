@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace xpf.Http
 {
-    public class AcsBearerTokenProvider : IBearerTokenProvider
+    public class BearerTokenProvider : IBearerTokenProvider
     {
         string Ns { get; set; }
         string Realm { get; set; }
 
         static Dictionary<string, BearerToken> _tokens = new Dictionary<string, BearerToken>();
 
-        public AcsBearerTokenProvider(string ns, string realm)
+        public BearerTokenProvider(string ns, string realm)
         {
             Ns = ns;
             Realm = realm;

@@ -14,39 +14,41 @@ namespace xpf.Http
             var headerParts = rawCookie.Split(';');
             for (int i = 0; i < headerParts.Length; i++)
             {
-                var name = headerParts[i].Substring(0, headerParts[i].IndexOf('='));
-                var value = headerParts[i].Substring(name.Length + 1);
-                if (i == 0)
+                if (!string.IsNullOrWhiteSpace(headerParts[i]))
                 {
-                    // The first part is always the name of the cookie
-                    this.Name = name;
-                    this.Value = value;
-                }
-                else
-                {
-                    switch (name.Trim())
+                    var name = headerParts[i].Substring(0, headerParts[i].IndexOf('='));
+                    var value = headerParts[i].Substring(name.Length + 1);
+                    if (i == 0)
                     {
-                        case "expires":
-                            this.Expiry = DateTime.Parse(value);
-                            break;
-                        case "path":
-                            this.Path = value;
-                            break;
-                        case "domain":
-                            this.Domain = value;
-                            break;
-                        case "secure":
-                            this.IsSecure = true;
-                            break;
-                        case "HttpOnly":
-                            this.IsHttpOnly = true;
-                            break;
-                        case "Version":
-                            this.Version = value;
-                            break;
+                        // The first part is always the name of the cookie
+                        this.Name = name;
+                        this.Value = value;
+                    }
+                    else
+                    {
+                        switch (name.Trim())
+                        {
+                            case "expires":
+                                this.Expiry = DateTime.Parse(value);
+                                break;
+                            case "path":
+                                this.Path = value;
+                                break;
+                            case "domain":
+                                this.Domain = value;
+                                break;
+                            case "secure":
+                                this.IsSecure = true;
+                                break;
+                            case "HttpOnly":
+                                this.IsHttpOnly = true;
+                                break;
+                            case "Version":
+                                this.Version = value;
+                                break;
+                        }
                     }
                 }
-
             }
         }
 

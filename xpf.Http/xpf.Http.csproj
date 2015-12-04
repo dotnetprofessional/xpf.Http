@@ -40,7 +40,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AcsBearerTokenProvider.cs" />
+    <Compile Include="BearerTokenProvider.cs" />
     <Compile Include="Base64Encoder.cs" />
     <Compile Include="BearerToken.cs" />
     <Compile Include="GzipEncoder.cs" />

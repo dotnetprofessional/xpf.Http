@@ -146,7 +146,7 @@ namespace xpf.Http
                     }
                 }
                 else
-                    requestResponse.Headers.Add(new HttpHeader {Key = header.Key, Value = new List<string>(header.Value)});
+                    requestResponse.Headers.Add(new HttpHeader { Key = header.Key, Value = new List<string>(header.Value) });
             }
 
             return requestResponse;

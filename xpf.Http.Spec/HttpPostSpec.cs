@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using System.Net;
-using LiveDoc.Extensions;
+using LiveSpec.Extensions.MSpec;
 using Machine.Specifications;
 using xpf.Http.Spec.TestModels;
 

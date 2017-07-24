@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LiveDoc.Extensions;
+using LiveSpec.Extensions.MSpec;
 using Machine.Specifications;
 
 namespace xpf.Http.Spec

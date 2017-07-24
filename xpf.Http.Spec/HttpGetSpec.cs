@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using FluentAssertions;
-using LiveDoc.Extensions;
+using LiveSpec.Extensions.MSpec;
 using Machine.Specifications;
 using Nancy.Routing.Constraints;
 using xpf.Http.Spec.TestModels;

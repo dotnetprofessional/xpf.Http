@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using LiveDoc.Extensions;
+using LiveSpec.Extensions.MSpec;
 using Machine.Specifications;
 
 namespace xpf.Http.Extensions.Spec

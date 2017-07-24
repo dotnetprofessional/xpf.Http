@@ -91,6 +91,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="GetHttpTest.cs" />
     <Compile Include="GzipSpec.cs" />
     <Compile Include="FeatureAttribute.cs" />
     <Compile Include="HtmlLocatorSpec.cs" />

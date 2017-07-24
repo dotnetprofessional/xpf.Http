@@ -229,5 +229,34 @@ namespace xpf.Http.Spec
                 Result.RawContent.Should().Match(r => r.Contains("html"));
             };
         }
+
+        [Given(@"The the URL below which which supports gzip encoding
+                '''
+                http://siph0n.net/exploits.php?id=965
+                '''")]
+        public class When_requesting_a_url_debug
+        {
+            static LiveDocScenario Scenario;
+            Establish given = () =>
+            {
+                Scenario = new LiveDocScenario(typeof(When_requesting_a_url_debug));
+            };
+
+            static HttpResponse<string> Result;
+            static string Url;
+
+            Because when = () =>
+            {
+                Url = Scenario.Given.DocString;
+                var http = new Http();
+                Result = http.Navigate(Url).UserAgent.IE11.GetAsync<string>().Result;
+            };
+
+            It should_have_status_code_of_OK = () => Result.StatusCode.Should().Be(HttpStatusCode.OK);
+            It should_have_return_uncompressed_result = () =>
+            {
+                Result.RawContent.Should().Match(r => r.Contains("html"));
+            };
+        }
     }
 }

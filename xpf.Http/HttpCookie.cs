@@ -16,8 +16,16 @@ namespace xpf.Http
             {
                 if (!string.IsNullOrWhiteSpace(headerParts[i]))
                 {
-                    var name = headerParts[i].Substring(0, headerParts[i].IndexOf('='));
-                    var value = headerParts[i].Substring(name.Length + 1);
+                    var name = "";
+                    var value = "";
+                    if (headerParts[i].Contains("="))
+                    {
+                        name = headerParts[i].Substring(0, headerParts[i].IndexOf('=')).Trim();
+                        value = headerParts[i].Substring(name.Length + 2);
+                    }
+                    else
+                        name = headerParts[i].Trim();
+
                     if (i == 0)
                     {
                         // The first part is always the name of the cookie
@@ -26,7 +34,7 @@ namespace xpf.Http
                     }
                     else
                     {
-                        switch (name.Trim())
+                        switch (name)
                         {
                             case "expires":
                                 this.Expiry = DateTime.Parse(value);
